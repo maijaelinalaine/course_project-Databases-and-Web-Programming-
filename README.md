@@ -1,4 +1,4 @@
-# course_project-Databases-and-Web-Programming-
+# event_calendar
 
 Event calendar website for a student association, inspired by University of Helsinki student associations' event calendars.
 
