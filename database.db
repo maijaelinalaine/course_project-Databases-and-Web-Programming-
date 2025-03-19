@@ -9,3 +9,11 @@ CREATE TABLE users (
     password_hash TEXT
 );
 
+CREATE TABLE events (
+    id INTEGER PRIMARY KEY,
+    title TEXT,
+    content TEXT,
+    category TEXT,
+    user_id = INTEGER 
+    REFERENCES users
+);
