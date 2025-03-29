@@ -3,5 +3,4 @@ venv
 database.db
 config.__pycache__
 db.__pycache__
-index.html
-register.html
+config.py
