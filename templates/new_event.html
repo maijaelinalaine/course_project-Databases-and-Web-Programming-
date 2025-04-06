@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Uusi ilmoitus</title>
+  </head>
+
+  <body>
+    <h1>Uusi ilmoitus</h1>
+    <form action="/create_event" method="post">
+      <p>
+        Otsikko: <br />
+        <input type="text" name="title" />
+      </p>
+      <p>
+        Kuvaus: <br />
+        <textarea name="description" rows="8" cols="40"></textarea>
+      </p>
+      <p>
+        Tapahtuman tyyppi: <br />
+        <select name="sitsit">
+          Sitsit
+        </select>
+        <option value="bileet">Bileet</option>
+        <option value="appro">Appro</option>
+        <option value="excu">Excu</option>
+        <option value="risteily">Risteily</option>
+        <option value="liikunta">Liikunta</option>
+        <option value="tapaaminen">Tapaaminen</option>
+        <option value="muu">Muu</option>
+      </p>
+      <input type="submit" value="Luo ilmoitus" />
+    </form>
+  </body>
+</html>
