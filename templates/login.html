@@ -6,7 +6,7 @@
 
   <body>
     {% if session.username %}
-    <p>Olet kirjautunut nimellä session.username</p>
+    <p>Olet kirjautunut nimellä {{session.username}}</p>
     <p>
       <a href="/logout">Kirjaudu ulos</a>
     </p>
