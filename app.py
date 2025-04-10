@@ -4,14 +4,20 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
-import items
+import events
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    all_events = events.get_events()
+    return render_template("index.html", events=all_events)
+
+@app.route("/event/<int:event_id>")
+def show_event(event_id):
+    event = events.get_event(event_id)
+    return render_template("show_item.html", item=event)
 
 @app.route("/new_event")
 def new_event():
@@ -21,10 +27,12 @@ def new_event():
 def create_event():
     title = request.form["title"]
     description = request.form["description"]
-    type = request.form["type"]
+    event_type = request.form["event_type"]
+    if "user_id" not in session:
+        return redirect("/login")
     user_id = session["user_id"]
-
-    items.add_items(title, description, type, user_id)
+    
+    events.add_event(title, description, event_type, user_id)
     return redirect("/")
 
 @app.route("/register")
@@ -74,4 +82,5 @@ def login():
 def logout():
     del session["user_id"]
     del session["username"]
-    return redirect("/")@app.route("/create", methods=["POST"])
+    return redirect("/")
+

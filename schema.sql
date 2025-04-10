@@ -8,6 +8,6 @@ CREATE TABLE events (
     id INTEGER PRIMARY KEY,
     title TEXT,
     description TEXT,
-    type TEXT,
+    event_type TEXT,
     user_id INTEGER REFERENCES users
 );

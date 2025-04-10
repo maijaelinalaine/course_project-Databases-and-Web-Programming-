@@ -29,6 +29,18 @@
       <a href="/login"> Kirjaudu sisään </a>
       <a href="/register"> Luo tunnus </a>
     </p>
-    <a href="/new_event"> Uusi ilmoitus</a>
+    <p>
+      <a href="/new_event"> Uusi tapahtuma </a>
+    </p>
+
+    <p></p>
+    <h2>Tapahtumat</h2>
+
+    <ul>
+      {% for event in events %}
+      <li><a href="/event/{{ event_id }}">{{ event.title }}</a></li>
+      {% endfor %}
+      </li>
+    </ul>
   </body>
 </html>
