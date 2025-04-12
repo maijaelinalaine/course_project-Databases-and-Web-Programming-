@@ -6,7 +6,7 @@ def add_event(title, description, event_type, user_id):
     db.execute(sql, [title, description, event_type, user_id])
 
 def get_events():
-    sql = """SELECT id, title FROM items ORDER BY id DESC"""
+    sql = """SELECT id, title FROM events ORDER BY id DESC"""
     return db.query(sql)
 
 def get_event(event_id):

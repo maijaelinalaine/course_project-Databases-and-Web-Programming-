@@ -9,7 +9,8 @@ CREATE TABLE events (
     title TEXT,
     description TEXT,
     event_type TEXT,
-    user_id INTEGER REFERENCES users
+    user_id INTEGER REFERENCES users(id)
+);
 
 #CREATE TABLE signups (
     id INTEGER PRIMARY KEY,
