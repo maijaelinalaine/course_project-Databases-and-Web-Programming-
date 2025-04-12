@@ -44,3 +44,32 @@
     </ul>
   </body>
 </html>
+<form action="/search" method="get">
+  <p>
+    Hakusana:
+    {% if query %}
+    <input type="text" name="query" value="{{ query }}" />
+    {% else %}
+    <input type="text" name="query" />
+    {% endif %}
+  </p>
+  <input type="submit" value="Hae" />
+</form>
+<p>
+  <a href="/search"> Hae tapahtumia </a>
+  {% if query %}
+  <hr />
+  <h2>Tulokset</h2>
+  
+  <ul>
+  {% for result in results %}
+    <li>
+      <a href="/event/{{ result.event_id }}">
+        {{ result.event_title }}
+      </a>
+      <br />
+      {{ result.username }}
+    </li>  
+  {% endfor %}
+  </ul>
+  {% endif %}

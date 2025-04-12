@@ -1,0 +1,9 @@
+<form action="/edit/{{ event.id }}" method="post">
+  <p>
+    Tapahtuma:<br />
+    <textarea name="content" rows="5" cols="40">
+{{ event.description }}</textarea
+    >
+  </p>
+  <input type="submit" value="Lähetä" />
+</form>
