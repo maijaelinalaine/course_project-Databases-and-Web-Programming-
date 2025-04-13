@@ -1,30 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    
     <title>Kirjautuminen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
   </head>
 
   <body>
+    <div class = "header">
     <h1>Tapahtumakalenteri</h1>
-    {% if session.username %}
-    <p>Olet kirjautunut nimellä {{ session.username }}</p>
-    <p>
-      <a href="/logout">Kirjaudu ulos</a>
-    </p>
-    {% else %}
-    <form action="/login" method="post">
-      <p>
-        Tunnus: <br />
-        <input type="text" name="username" />
-      </p>
-      <p>
-        Salasana: <br />
-        <input type="password" name="password" />
-      </p>
-      <input type="submit" value="Kirjaudu" />
-    </form>
-    {% endif %}
-
+    </div>
+    <div class = "nav">
     <p>
       <a href="/login"> Kirjaudu sisään </a>
       <a href="/register"> Luo tunnus </a>
@@ -34,11 +21,13 @@
     </p>
 
     <p></p>
+    <div class = "header">
     <h2>Tapahtumat</h2>
-
+  </div>
     <ul>
       {% for event in events %}
       <li><a href="/event/{{ event_id }}">{{ event.title }}</a></li>
+      <li>{{ event.description }}</li>
       {% endfor %}
       </li>
     </ul>

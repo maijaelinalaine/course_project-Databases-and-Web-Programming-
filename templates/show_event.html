@@ -2,10 +2,15 @@
 <html>
   <head>
     <title>{{ event.title }}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
   </head>
 
   <body>
     <h1>{{ event.title }}</h1>
+
     <p>{{ event.description }}</p>
     <p>Tapahtuman tyyppi: {{ event.event_type }}</p>
     <p>Ilmoittaja: {{ event.username }}</p>

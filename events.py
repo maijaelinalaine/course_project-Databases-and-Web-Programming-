@@ -13,6 +13,7 @@ def get_event(event_id):
     sql = """SELECT events.title,
                     events.description,
                     events.event_type,
+                    users.id user_id,
                     users.username
             FROM events, users
             WHERE events.user_id = user_id

@@ -12,10 +12,10 @@ CREATE TABLE events (
     user_id INTEGER REFERENCES users(id)
 );
 
-#CREATE TABLE signups (
+CREATE TABLE signups (
     id INTEGER PRIMARY KEY,
-    event_id INTEGER REFERENCES events,
-    user_id INTEGER REFERENCES users,
+    event_id INTEGER REFERENCES events(id),
+    user_id INTEGER REFERENCES users(id),
+    signup_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(event_id, user_id)
-)
 );
