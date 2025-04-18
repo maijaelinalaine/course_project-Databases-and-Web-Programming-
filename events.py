@@ -1,26 +1,35 @@
 import db
 
-def add_event(title, description, event_type, user_id):
-    sql = """INSERT INTO events (title, description, event_type, user_id)
-            VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [title, description, event_type, user_id])
+def add_event(title, event_time, description, event_type, user_id):
+    sql = """INSERT INTO events (title, event_time, description, event_type, user_id)
+            VALUES (?, ?, ?, ?, ?)"""
+    cursor = db.execute(sql, [title, event_time, description, event_type, user_id])
+
+    return cursor.lastrowid
 
 def get_events():
     sql = """SELECT id, title FROM events ORDER BY id DESC"""
+
     return db.query(sql)
 
 def get_event(event_id):
     sql = """SELECT events.title,
+                    events.event_time,
                     events.description,
                     events.event_type,
-                    users.id user_id,
+                    users.id AS user_id,
                     users.username
-            FROM events, users
-            WHERE events.user_id = user_id
-            AND events.id = ?"""
-    return db.query(sql, [event_id])[0]
+            FROM events
+            JOIN users ON events.user_id = users.id
+            WHERE events.id = ?"""
+    result = db.query(sql, [event_id])
 
-def update_event(event_id, description):
+    if result:
+        return result[0]
+    else:
+        return None
+
+def edit_event(event_id, description):
     sql = "UPDATE events SET description = ? WHERE id = ?"
     db.execute(sql, [description, event_id])
 
@@ -38,5 +47,6 @@ def search(query):
             WHERE e.user_id = u.id
             AND (e.event_type LIKE ?)
             ORDER BY e.id DESC"""
+    
     return db.query(sql, ["%" + query + "%"])
     

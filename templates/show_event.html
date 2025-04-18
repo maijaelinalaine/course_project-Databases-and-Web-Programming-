@@ -9,7 +9,10 @@
   </head>
 
   <body>
-    <h1>{{ event.title }}</h1>
+    <h1>
+      {{ event.title }} {{ event.event_time }}<br />
+      <br />
+    </h1>
 
     <p>{{ event.description }}</p>
     <p>Tapahtuman tyyppi: {{ event.event_type }}</p>

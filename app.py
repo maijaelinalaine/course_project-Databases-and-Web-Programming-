@@ -21,7 +21,7 @@ def index():
 def search():
     try:
         query = request.args.get("query")
-        results = events.search_events(query) if query else []
+        results = events.search(query) if query else []
         return render_template("search.html", query=query, results=results)
     except Exception:
         return f"Virhe: tapahtumien haku epäonnistui"
@@ -74,19 +74,23 @@ def new_event():
 @app.route("/create_event", methods=["POST"])
 def create_event():
     try:
+        event_time = request.form["event_time"]
         title = request.form["title"]
         description = request.form["description"]
         event_type = request.form["event_type"]
+        
         if "user_id" not in session:
             return redirect("/login")
         user_id = session["user_id"]
-        if not title or len(title) > 100 or len(description) > 1000:
+
+        if not title or not event_time or len(title) > 100 or len(description) > 1000:
             return "VIRHE: virheellinen tapahtuma"
-        
-        events.add_event(title, description, event_type, user_id)
-        return redirect("/")
-    except Exception:
-        return f"Virhe: tapahtuman luominen epäonnistui"
+    
+        event_id = events.add_event(title, event_time, description, event_type, user_id)
+
+        return redirect(f"/event/{event_id}")
+    except Exception as e:
+        return "Virhe: tapahtuman luominen epäonnistui"
     
 @app.route("/register")
 def register():

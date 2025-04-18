@@ -3,8 +3,9 @@ body {
   max-width: 50em;
   font-family: Spectral, monospace;
   background-color: rgb(16, 32, 32);
-  font-size: 17px;
+  font-size: 18px;
   text-align: center;
+  color: white;
 }
 h1 {
   color: rgb(201, 201, 102);
