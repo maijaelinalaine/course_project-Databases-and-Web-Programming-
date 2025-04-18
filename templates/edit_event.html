@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Uusi tapahtuma</title>
+    <title>Tapahtuman muokkaus</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='main.css') }}"
@@ -9,8 +9,8 @@
   </head>
 
   <body>
-    <h1>Uusi tapahtuma</h1>
-    <form action="/create_event" method="post">
+    <h1>Tapahtuman muokkaus</h1>
+    <form action="/update_event" method="post">
       <p>
         Tapahtuman ajankohta: <br />
         <input
@@ -55,7 +55,7 @@
           <option value="muu">Muu</option>
         </select>
       </p>
-      <input type="submit" value="Luo ilmoitus" />
+      <input type="submit" value="Päivitä ilmoitus" />
     </form>
   </body>
 </html>

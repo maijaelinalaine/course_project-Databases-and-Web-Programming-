@@ -9,7 +9,15 @@
   </head>
 
   <body>
-    <h1>{{ event.title }} <br /></h1>
+    <h1>{{ event.title }}</h1>
+
+    {% if session.user_id == event.user_id %}
+    <p>
+      <a href="/edit_event/{{ event.id }}">Muokkaa</a>
+    </p>
+    {% endif %}
+
+    <p></p>
     <p>{{ event.event_time }}</p>
     <p>{{ event.description }}</p>
     <p>Tapahtuman tyyppi: {{ event.event_type }}</p>

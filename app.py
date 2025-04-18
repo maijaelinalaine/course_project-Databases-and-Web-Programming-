@@ -1,9 +1,8 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session
-from werkzeug.security import generate_password_hash, check_password_hash
 import config
-import db
+import users
 import events
 
 app = Flask(__name__)
@@ -26,7 +25,7 @@ def search():
     except Exception:
         return f"Virhe: tapahtumien haku epäonnistui"
     
-@app.route("/edit/<int:event_id>", methods=["GET", "POST"])
+@app.route("/edit_event/<int:event_id>", methods=["GET", "POST"])
 def edit_event(event_id):
     try:
         event = events.get_event(event_id)
@@ -96,52 +95,39 @@ def create_event():
     
 @app.route("/register")
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
 
-@app.route("/create", methods=["POST"])
-def create():
-    try:
+    if request.method == "POST":
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
 
         if password1 != password2:
             return "VIRHE: salasanat eivät ole samat"
-        password_hash = generate_password_hash(password1)
 
         try:
-            sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-            db.execute(sql, [username, password_hash])
+            users.create_user(username, password1)
+            return "Tunnus luotu"
         except sqlite3.IntegrityError:
             return "VIRHE: tunnus on jo varattu"
 
-        return "Tunnus luotu"
-    except Exception:
-        return f"Virhe: tunnuksen luominen epäonnistui"
 
 @app.route("/login", methods=["GET","POST"])
 def login():
-    try:
-        if request.method == "GET":
-            return render_template("login.html")
+    if request.method == "GET":
+        return render_template("login.html")
 
-        if request.method == "POST":
-            username = request.form["username"]
-            password = request.form["password"]
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
-            sql = "SELECT id, password_hash FROM users WHERE username = ?"
-            result = db.query(sql, [username])[0]
-            user_id = result["id"]
-            password_hash = result["password_hash"]
-
-            if check_password_hash(password_hash, password):
-                session["user_id"] = user_id
-                session["username"] = username
-                return redirect("/")
-            else:
-                return "VIRHE: väärä tunnus tai salasana"
-    except Exception:
-        return f"Virhe: kirjautuminen epäonnistui"
+        user_id = users.check_login(username, password)
+        if user_id:
+            session["user_id"] = user_id
+            return redirect("/")
+        else:
+            return "VIRHE: väärä tunnus tai salasana"
     
 @app.route("/logout")
 def logout():
@@ -154,4 +140,4 @@ def logout():
     
 if __name__ == "__main__":
     app.run(debug=True)
-    db.create_tables()
+

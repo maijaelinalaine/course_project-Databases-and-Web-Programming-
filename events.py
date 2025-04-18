@@ -45,9 +45,9 @@ def get_event(event_id):
     else:
         return None
 
-def edit_event(event_id, description):
-    sql = "UPDATE events SET description = ? WHERE id = ?"
-    db.execute(sql, [description, event_id])
+def edit_event(event_id, title, event_time, description, event_type):
+    sql = "UPDATE events SET title = ? AND description = ? AND event_time = ? AND event_type = ? WHERE id = ?"
+    db.execute(sql, [title, event_time, description, event_type, event_id])
 
 def remove_event(event_id):
     sql = "DELETE FROM events WHERE id = ?"
