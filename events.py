@@ -1,11 +1,27 @@
 import db
-
+from datetime import datetime
 def add_event(title, event_time, description, event_type, user_id):
-    sql = """INSERT INTO events (title, event_time, description, event_type, user_id)
-            VALUES (?, ?, ?, ?, ?)"""
-    cursor = db.execute(sql, [title, event_time, description, event_type, user_id])
+    try:
+        if "T" in event_time:
+            event_time = datetime.strptime(event_time, "%Y-%m-%dT%H:%M")
+        else:
+            event_time = datetime.strptime(event_time, "%Y-%m-%d")
+        
+        event_time_formatted = event_time.strftime("%Y-%m-%d %H:%M:%S")
+        
+        sql = """INSERT INTO events (title, event_time, description, event_type, user_id)
+                VALUES (?, ?, ?, ?, ?)"""
+        
+        db.execute(sql, [title, event_time_formatted, description, event_type, user_id])
 
-    return cursor.lastrowid
+        return db.last_insert_id()
+        
+    except ValueError as e:
+        print(f"Date format error: {e}")
+        raise ValueError(f"Virheellinen päivämäärän muoto: {event_time}")
+    except Exception as e:
+        print(f"Database error in add_event: {e}")
+        raise
 
 def get_events():
     sql = """SELECT id, title FROM events ORDER BY id DESC"""
@@ -13,15 +29,15 @@ def get_events():
     return db.query(sql)
 
 def get_event(event_id):
-    sql = """SELECT events.title,
-                    events.event_time,
-                    events.description,
-                    events.event_type,
-                    users.id AS user_id,
-                    users.username
-            FROM events
-            JOIN users ON events.user_id = users.id
-            WHERE events.id = ?"""
+    sql = """SELECT e.title,
+                    e.event_time,
+                    e.description,
+                    e.event_type,
+                    u.id AS user_id,
+                    u.username
+            FROM events e, users u
+            JOIN users ON e.user_id = u.id
+            WHERE e.id = ?"""
     result = db.query(sql, [event_id])
 
     if result:

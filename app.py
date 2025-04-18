@@ -64,8 +64,8 @@ def show_event(event_id):
         if not event:
             return "VIRHE: tapahtumaa ei löydy"
         return render_template("show_event.html", event=event)
-    except Exception:
-        return f"Virhe: tapahtuman näyttäminen epäonnistui"
+    except Exception as e:
+        return f"Virhe: tapahtuman näyttäminen epäonnistui: {str(e)}"
     
 @app.route("/new_event")
 def new_event():
@@ -83,14 +83,16 @@ def create_event():
             return redirect("/login")
         user_id = session["user_id"]
 
-        if not title or not event_time or len(title) > 100 or len(description) > 1000:
-            return "VIRHE: virheellinen tapahtuma"
-    
         event_id = events.add_event(title, event_time, description, event_type, user_id)
-
+        
         return redirect(f"/event/{event_id}")
+        
+    except ValueError as e:
+        print(f"Virhe: {str(e)}", "error")
+        return redirect("/new_event")
     except Exception as e:
-        return "Virhe: tapahtuman luominen epäonnistui"
+        print(f"Error in create_event: {str(e)}")
+        return redirect("/new_event")
     
 @app.route("/register")
 def register():

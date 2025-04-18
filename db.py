@@ -14,6 +14,7 @@ def create_tables():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS events (
             id INTEGER PRIMARY KEY,
+            event_time DATETIME,
             title TEXT,
             description TEXT,
             event_type TEXT,
@@ -43,6 +44,7 @@ def execute(sql, params=[]):
     con.commit()
     g.last_insert_id = result.lastrowid
     con.close()
+    return result
 
 def last_insert_id():
     return g.last_insert_id    

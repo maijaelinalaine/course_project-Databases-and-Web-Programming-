@@ -4,7 +4,7 @@
     <title>Uusi ilmoitus</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
+      href="{{ url_for('static', filename='main.css') }}"
     />
   </head>
 
@@ -13,7 +13,13 @@
     <form action="/create_event" method="post">
       <p>
         Tapahtuman ajankohta: <br />
-        <input type="text" name="event_time" rows="1" cols="25" required />
+        <input
+          type="datetime-local"
+          name="event_time"
+          rows="1"
+          cols="25"
+          required
+        />
       </p>
       <p>
         Otsikko: <br />
@@ -37,8 +43,8 @@
       </p>
       <p>
         Tapahtuman tyyppi: <br />
-        <select name="event_type">
-          <option value="valitse">Valitse tapahtuman tyyppi</option>
+        <select name="event_type" required>
+          <option value="" disabled selected>Valitse tapahtuman tyyppi</option>
           <option value="sitsit">Sitsit</option>
           <option value="bileet">Bileet</option>
           <option value="appro">Appro</option>
