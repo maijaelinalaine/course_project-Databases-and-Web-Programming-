@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <title>Kirjautuminen</title>
+    <title>Etusivu</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
 
   </head>
@@ -19,46 +21,41 @@
     <p>
       <a href="/new_event"> Uusi tapahtuma </a>
     </p>
-
+    <a href="/search"> Hae tapahtumia </a>
     <p></p>
     <div class = "header">
-    <h2>Tapahtumat</h2>
-  </div>
-    <ul>
-      {% for event in events %}
-        <a href="/event/{{ event.id }}"> 
-          {{ event.event_time }} {{ event.title }}</a>
-        <br />
-      {% endfor %}
-    </ul>
+      <style>
+        /* Keskitetään lista */
+        ul {
+            list-style-type: none; /* Poistaa oletuslistausmerkit */
+            padding: 0; /* Poistaa oletustäytön */
+            text-align: center; /* Keskittää tekstin */
+        }
+
+        /* Lisää marginaalia alareunaan jokaiselle listan elementille */
+        li {
+            margin-bottom: 20px; /* Voit säätää tätä arvoa haluamasi rivivälin mukaan */
+        }
+
+        /* Käytetään pseudo-elementtiä listausmerkkien luomiseen */
+        .event-date::before {
+            content: "• "; /* Lisää listausmerkin */
+            color: black; /* Voit muuttaa väriä halutessasi */
+        }
+    </style>
+      <h2 style="text-align: center;">Tapahtumat</h2>
+      <ul>
+        {% for event in events %}
+          <li>
+            <a href="/event/{{ event.id }}">
+              {{ event.title }}
+            </a>
+            <br>
+          <div class = "time">
+            <span class="event-date">{{ event.event_time }}</span>
+          
+          </li>
+        {% endfor %}
+      </ul>
   </body>
 </html>
-<form action="/search" method="get">
-  <p>
-    Hakusana:
-    {% if query %}
-    <input type="text" name="query" value="{{ query }}" />
-    {% else %}
-    <input type="text" name="query" />
-    {% endif %}
-  </p>
-  <input type="submit" value="Hae" />
-</form>
-<p>
-  <a href="/search"> Hae tapahtumia </a>
-  {% if query %}
-  <hr />
-  <h2>Tulokset</h2>
-  
-  <ul>
-  {% for result in results %}
-    <li>
-      <a href="/event/{{ result.event.id }}">
-        {{ result.event_title }}
-      </a>
-      <br />
-      {{ result.username }}
-    </li>  
-  {% endfor %}
-  </ul>
-  {% endif %}

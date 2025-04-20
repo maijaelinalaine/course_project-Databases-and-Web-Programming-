@@ -9,7 +9,6 @@ body {
 }
 h1 {
   color: rgb(201, 201, 102);
-  text-align: center;
 }
 
 .header {
@@ -17,6 +16,9 @@ h1 {
   color: rgb(218, 218, 112);
 }
 
+.time {
+  color: white;
+}
 .nav {
   background-color: rgb(16, 32, 32);
   color: white;
@@ -26,4 +28,12 @@ h1 {
   background-color: rgb(218, 218, 112);
   color: white;
   padding: 50px;
+}
+
+a {
+  color: rgb(140, 170, 137);
+}
+
+a:hover {
+  color: rgb(140, 170, 137);
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Tapahtuman muokkaus</title>
+    <title>Muokkaa tapahtumaa</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='main.css') }}"
@@ -9,8 +9,8 @@
   </head>
 
   <body>
-    <h1>Tapahtuman muokkaus</h1>
-    <form action="/update_event" method="post">
+    <h1>Muokkaa ilmoitusta</h1>
+    <form action="{{ url_for('edit_event', event_id=event.id) }}" method="post">
       <p>
         Tapahtuman ajankohta: <br />
         <input
@@ -18,6 +18,7 @@
           name="event_time"
           rows="1"
           cols="25"
+          value="{{ event.event_time }}"
           required
         />
       </p>
@@ -29,6 +30,7 @@
           rows="1"
           cols="25"
           maxlength="50"
+          value="{{ event.title }}"
           required
         />
       </p>
@@ -39,11 +41,16 @@
           rows="10"
           cols="50"
           maxlength="5000"
+          value="{{ event.description }}"
+          required
         ></textarea>
       </p>
       <p>
         Tapahtuman tyyppi: <br />
         <select name="event_type" required>
+          <option value="{{ event.event_type }}" selected>
+            {{ event.event_type }}
+          </option>
           <option value="" disabled selected>Valitse tapahtuman tyyppi</option>
           <option value="sitsit">Sitsit</option>
           <option value="bileet">Bileet</option>

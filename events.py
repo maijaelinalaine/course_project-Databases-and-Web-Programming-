@@ -1,5 +1,6 @@
 import db
 from datetime import datetime
+
 def add_event(title, event_time, description, event_type, user_id):
     try:
         if "T" in event_time:
@@ -24,8 +25,7 @@ def add_event(title, event_time, description, event_type, user_id):
         raise
 
 def get_events():
-    sql = """SELECT id, title FROM events ORDER BY id DESC"""
-
+    sql = "SELECT id, title, event_time FROM events ORDER BY event_time ASC"
     return db.query(sql)
 
 def get_event(event_id):

@@ -13,8 +13,9 @@ def index():
     try:
         all_events = events.get_events()
         return render_template("index.html", events=all_events)
-    except Exception:
-        return f"Virhe: tapahtumien haku epäonnistui"
+    
+    except Exception as e:
+        return f"Virhe: tapahtumien haku epäonnistui, virhe: {str(e)}"
         
 @app.route("/search")
 def search():
@@ -22,6 +23,7 @@ def search():
         query = request.args.get("query")
         results = events.search(query) if query else []
         return render_template("search.html", query=query, results=results)
+    
     except Exception:
         return f"Virhe: tapahtumien haku epäonnistui"
     
@@ -34,10 +36,14 @@ def edit_event(event_id):
             return render_template("edit_event.html", event=event)
         
         if request.method == "POST":
+            title = request.form["title"]
+            event_time = request.form["event_time"]
             description = request.form["description"]
-            events.update_event(event["id"], description)
+            event_type = request.form["event_type"]
+            events.edit_event(event_id, title, event_time, description, event_type)
 
             return redirect("/event/" + str(event_id))
+        
     except Exception:
         return f"Virhe: tapahtuman muokkaus epäonnistui"
     
@@ -52,7 +58,9 @@ def remove_event(event_id):
         if request.method == "POST":
             if "continue" in request.form:
                 events.remove_event(event["id"])
+
             return redirect("/event/" + str(event_id))
+        
     except Exception:
         return f"Virhe: tapahtuman poistaminen epäonnistui"
     
@@ -63,6 +71,7 @@ def show_event(event_id):
         if not event:
             return "VIRHE: tapahtumaa ei löydy"
         return render_template("show_event.html", event=event)
+    
     except Exception as e:
         return f"Virhe: tapahtuman näyttäminen epäonnistui: {str(e)}"
     
@@ -89,6 +98,7 @@ def create_event():
     except ValueError as e:
         print(f"Virhe: {str(e)}", "error")
         return redirect("/new_event")
+    
     except Exception as e:
         print(f"Error in create_event: {str(e)}")
         return redirect("/new_event")
@@ -105,12 +115,16 @@ def register():
 
         if password1 != password2:
             return "VIRHE: salasanat eivät ole samat"
+        if not username or not password1:
+            return "VIRHE: käyttäjätunnus tai salasana puuttuu"
 
         try:
             users.create_user(username, password1)
             return "Tunnus luotu"
+        
         except sqlite3.IntegrityError:
             return "VIRHE: tunnus on jo varattu"
+
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -123,9 +137,11 @@ def login():
         password = request.form["password"]
 
         user_id = users.check_login(username, password)
+
         if user_id:
             session["user_id"] = user_id
             return redirect("/")
+        
         else:
             return "VIRHE: väärä tunnus tai salasana"
     
@@ -135,6 +151,7 @@ def logout():
         del session["user_id"]
         del session["username"]
         return redirect("/")
+    
     except Exception:
         return f"Virhe: uloskirjautuminen epäonnistui"
     
