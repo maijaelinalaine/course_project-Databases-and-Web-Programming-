@@ -1,12 +1,17 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import abort, flash, redirect, render_template, request, session
 import config
 import users
 import events
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -29,6 +34,7 @@ def search():
     
 @app.route("/edit_event/<int:event_id>", methods=["GET", "POST"])
 def edit_event(event_id):
+    require_login()
     try:
         event = events.get_event(event_id)
 
@@ -49,6 +55,7 @@ def edit_event(event_id):
     
 @app.route("/remove/<int:event_id>", methods=["GET", "POST"])
 def remove_event(event_id):
+    require_login()
     try:
         event = events.get_event(event_id)
 
@@ -77,10 +84,12 @@ def show_event(event_id):
     
 @app.route("/new_event")
 def new_event():
+    require_login()
     return render_template("new_event.html")
 
 @app.route("/create_event", methods=["POST"])
 def create_event():
+    require_login()
     try:
         event_time = request.form["event_time"]
         title = request.form["title"]
@@ -105,27 +114,25 @@ def create_event():
     
 @app.route("/register")
 def register():
-    if request.method == "GET":
-        return render_template("register.html")
+    return render_template("register.html")
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password1 = request.form["password1"]
-        password2 = request.form["password2"]
+@app.route("/create", methods=["POST"])
+def create():
+    username = request.form["username"]
+    password1 = request.form["password1"]
+    password2 = request.form["password2"]
+    if password1 != password2:
+        flash("VIRHE: salasanat eivät ole samat")
+        return redirect("/register")
 
-        if password1 != password2:
-            return "VIRHE: salasanat eivät ole samat"
-        if not username or not password1:
-            return "VIRHE: käyttäjätunnus tai salasana puuttuu"
+    try:
+        users.create_user(username, password1)
+    except sqlite3.IntegrityError:
+        flash("VIRHE: tunnus on jo varattu")
+        return redirect("/register")
 
-        try:
-            users.create_user(username, password1)
-            return "Tunnus luotu"
+    return redirect("/")
         
-        except sqlite3.IntegrityError:
-            return "VIRHE: tunnus on jo varattu"
-
-
 
 @app.route("/login", methods=["GET","POST"])
 def login():
