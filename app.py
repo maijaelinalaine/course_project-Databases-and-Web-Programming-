@@ -26,7 +26,11 @@ def index():
 def search():
     try:
         query = request.args.get("query")
-        results = events.search(query) if query else []
+        if query:
+            results = events.search(query)
+        else:
+            query = ""
+            results = []
         return render_template("search.html", query=query, results=results)
     
     except Exception:
