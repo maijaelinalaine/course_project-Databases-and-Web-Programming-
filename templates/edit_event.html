@@ -10,7 +10,7 @@
 
   <body>
     <h1>Muokkaa ilmoitusta</h1>
-    <form action="/edit_event" method="post">
+    <form action="/edit_event/{{ event.id }}" method="post">
       <p>
         Tapahtuman ajankohta: <br />
         <input
@@ -52,7 +52,6 @@
           <option value="{{ event.event_type }}" selected>
             {{ event.event_type }}
           </option>
-          <option value="" disabled selected>Valitse tapahtuman tyyppi</option>
           <option value="sitsit">Sitsit</option>
           <option value="bileet">Bileet</option>
           <option value="appro">Appro</option>

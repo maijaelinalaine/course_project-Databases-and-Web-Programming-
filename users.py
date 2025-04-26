@@ -16,3 +16,21 @@ def check_login(username, password):
             return user_id
 
     return None
+
+def get_user(user_id):
+    sql = """SELECT id, username, registered_at
+            FROM users
+            WHERE id = ?"""
+    result = db.query(sql, [user_id])
+
+    return result[0] if result else None
+
+def get_events(user_id):
+    sql = """SELECT e.id, e.title, e.event_time, e.description, e.event_type
+            FROM events e
+            WHERE e.user_id = ? 
+            ORDER BY e.event_time ASC"""
+    
+    result = db.query(sql, [user_id])
+
+    return result if result else None

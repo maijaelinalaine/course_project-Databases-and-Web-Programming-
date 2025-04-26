@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Käyttäjä {{ user.username }}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='main.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Käyttäjä {{ user.username }}</h1>
+
+    <p></p>
+    <p>Rekisteröitynyt: {{ user.registered_at }}</p>
+    <ul>
+      <p>Käyttäjän tapahtumat:</p>
+
+      {% for event in events %}
+      <li>
+        <a href="/event/{{ event.id }}">{{ event.title }}</a> -
+        {{event.event_time }}
+      </li>
+      {% endfor %}
+    </ul>
+    <p>
+      <a href="/">Takaisin</a>
+    </p>
+  </body>
+</html>

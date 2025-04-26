@@ -4,6 +4,7 @@ from flask import abort, flash, redirect, render_template, request, session
 import config
 import users
 import events
+import db
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -20,8 +21,30 @@ def index():
         return render_template("index.html", events=all_events)
     
     except Exception as e:
+        session["user_id"] = None
+        session["username"] = None
+        db.create_tables()
         return f"Virhe: tapahtumien haku epäonnistui, virhe: {str(e)}"
         
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    try:
+        user = users.get_user(user_id)
+        if not user:
+            abort(404)
+        events = users.get_events(user_id)
+        if not events:
+            events = []
+
+        print(user)
+        print(events)
+
+        return render_template("show_user.html", user=user, events=events)
+    
+    except Exception:
+        return f"Virhe: Käyttäjän näyttäminen epäonnistui"
+    
+
 @app.route("/search")
 def search():
     try:
@@ -68,13 +91,13 @@ def remove_event(event_id):
             abort(404)
 
         if request.method == "GET":
-            return render_template("remove.html", event=event)
+            return render_template("remove_event.html", event=event)
         
         if request.method == "POST":
             if "continue" in request.form:
                 events.remove_event(event["id"])
 
-            return redirect("/event/" + str(event_id))
+            return redirect("/")
         
     except Exception:
         return f"Virhe: tapahtuman poistaminen epäonnistui"
@@ -161,6 +184,7 @@ def login():
 
         if user_id:
             session["user_id"] = user_id
+            session["username"] = username
             return redirect("/")
         
         else:

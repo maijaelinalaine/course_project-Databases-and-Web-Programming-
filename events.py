@@ -29,7 +29,8 @@ def get_events():
     return db.query(sql)
 
 def get_event(event_id):
-    sql = """SELECT e.title,
+    sql = """SELECT e.id,
+                    e.title,
                     e.event_time,
                     e.description,
                     e.event_type,
