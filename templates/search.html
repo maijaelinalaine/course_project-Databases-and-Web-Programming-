@@ -11,7 +11,13 @@
     <h1>Hae tapahtumia</h1>
     <form action="/search" method="get">
       <p>Hae tapahtumia tyypin perusteella (esim. sitsit, appro, bileet...)</p>
-      <input type="text" name="search" placeholder="Hae tapahtumia..." />
+      <input
+        type="text"
+        name="query"
+        id="query"
+        value="{{query}}"
+        placeholder="Hae tapahtumia..."
+      />
       <input type="submit" value="Hae" />
     </form>
     <p>

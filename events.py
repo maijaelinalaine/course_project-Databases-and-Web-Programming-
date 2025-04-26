@@ -54,12 +54,10 @@ def remove_event(event_id):
     db.execute(sql, [event_id])
 
 def search(query):
-    sql = """SELECT e.id event_id,
-                    e.title,
-                    e.event_time,
+    sql = """SELECT id, event_time, title, event_type
             FROM events e
-            WHERE e.event_type LIKE ? OR e.title LIKE ?
-            ORDER BY e.event_time ASC"""
+            WHERE event_type LIKE ? OR title LIKE ?
+            ORDER BY event_time ASC"""
     like = "%" + query + "%"
     
     return db.query(sql, [like, like])

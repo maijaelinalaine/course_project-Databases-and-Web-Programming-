@@ -10,7 +10,7 @@
 
   <body>
     <h1>Muokkaa ilmoitusta</h1>
-    <form action="{{ url_for('edit_event', event_id=event.id) }}" method="post">
+    <form action="/edit_event" method="post">
       <p>
         Tapahtuman ajankohta: <br />
         <input
@@ -41,9 +41,10 @@
           rows="10"
           cols="50"
           maxlength="5000"
-          value="{{ event.description }}"
           required
-        ></textarea>
+        >
+{{ event.description }}</textarea
+        >
       </p>
       <p>
         Tapahtuman tyyppi: <br />

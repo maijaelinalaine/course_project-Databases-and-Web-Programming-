@@ -41,6 +41,8 @@ def edit_event(event_id):
     require_login()
     try:
         event = events.get_event(event_id)
+        if not event:
+            abort(404)
 
         if request.method == "GET":
             return render_template("edit_event.html", event=event)
@@ -53,7 +55,7 @@ def edit_event(event_id):
             events.edit_event(event_id, title, event_time, description, event_type)
 
             return redirect("/event/" + str(event_id))
-        
+                               
     except Exception:
         return f"Virhe: tapahtuman muokkaus epäonnistui"
     
@@ -62,7 +64,9 @@ def remove_event(event_id):
     require_login()
     try:
         event = events.get_event(event_id)
-
+        if not event:
+            abort(404)
+            
         if request.method == "GET":
             return render_template("remove.html", event=event)
         
@@ -80,11 +84,11 @@ def show_event(event_id):
     try:
         event = events.get_event(event_id)
         if not event:
-            return "VIRHE: tapahtumaa ei löydy"
+            abort(404)
         return render_template("show_event.html", event=event)
     
     except Exception as e:
-        return f"Virhe: tapahtuman näyttäminen epäonnistui: {str(e)}"
+        return f"Virhe: tapahtuman näyttäminen epäonnistui"
     
 @app.route("/new_event")
 def new_event():
@@ -109,11 +113,11 @@ def create_event():
         return redirect(f"/event/{event_id}")
         
     except ValueError as e:
-        print(f"Virhe: {str(e)}", "error")
+        print(f"Virhe: {str(e)}")
         return redirect("/new_event")
     
     except Exception as e:
-        print(f"Error in create_event: {str(e)}")
+        print("Error in create_event")
         return redirect("/new_event")
     
 @app.route("/register")
