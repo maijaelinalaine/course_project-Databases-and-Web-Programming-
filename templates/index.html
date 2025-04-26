@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <title>Etusivu</title>
+    <title>Tapahtumakalenteri</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
 
   </head>
@@ -14,12 +14,21 @@
     <h1>Tapahtumakalenteri</h1>
     </div>
     <div class = "nav">
-    <p>
-      <a href="/login"> Kirjaudu sisään </a>
-      <a href="/register"> Luo tunnus </a>
-    </p>
-    <p>
-      <a href="/new_event"> Uusi tapahtuma </a>
+      {% if session.username %}
+        <p>
+          Kirjautuneena: {{ session.username }}
+          <p>
+          <a href="/logout">Kirjaudu ulos</a>
+        </p>
+        <a href="/new_event"> Uusi tapahtuma </a>
+      
+      {% else %}
+          <p>
+            <a href="/login"> Kirjaudu sisään </a>
+            <a href="/register"> Luo tunnus </a>
+          </p>      
+      {% endif %}
+    
     </p>
     <a href="/search"> Hae tapahtumia </a>
     <p></p>

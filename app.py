@@ -66,7 +66,7 @@ def remove_event(event_id):
         event = events.get_event(event_id)
         if not event:
             abort(404)
-            
+
         if request.method == "GET":
             return render_template("remove.html", event=event)
         
@@ -101,8 +101,14 @@ def create_event():
     try:
         event_time = request.form["event_time"]
         title = request.form["title"]
+        if not title or len(title) > 50:
+            abort(403)
         description = request.form["description"]
+        if not description or len(description) > 5000:
+            abort(403)
         event_type = request.form["event_type"]
+        if not event_type:
+            abort(403)
         
         if "user_id" not in session:
             return redirect("/login")
@@ -166,7 +172,7 @@ def logout():
         del session["user_id"]
         del session["username"]
         return redirect("/")
-    
+
     except Exception:
         return f"Virhe: uloskirjautuminen epäonnistui"
     

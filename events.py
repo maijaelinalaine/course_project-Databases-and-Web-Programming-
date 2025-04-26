@@ -40,11 +40,8 @@ def get_event(event_id):
             WHERE e.id = ?"""
     result = db.query(sql, [event_id])
 
-    if result:
-        return result[0]
-    else:
-        return None
-
+    return result[0] if result else None
+   
 def edit_event(event_id, title, event_time, description, event_type):
     sql = "UPDATE events SET title = ? AND description = ? AND event_time = ? AND event_type = ? WHERE id = ?"
     db.execute(sql, [title, event_time, description, event_type, event_id])
