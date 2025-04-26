@@ -6,60 +6,48 @@
     
     <title>Tapahtumakalenteri</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-
   </head>
-
   <body>
     <div class = "header">
     <h1>Tapahtumakalenteri</h1>
     </div>
     <div class = "nav">
       {% if session.user_id %}
-        <p>
-          Kirjautuneena: {{ session.username }}
+        <div class="login">
           <p>
-          <a href="/logout">Kirjaudu ulos</a>
-        </p>
-        <a href="/new_event"> Uusi tapahtuma </a>
+            Kirjautuneena: {{ session.username }} 
+          </p>
+          <p>
+          <a class="auth-button" href="/logout">Kirjaudu ulos</a>
+        </div>
       
       {% else %}
-          <p>
-            <a href="/login"> Kirjaudu sisään </a>
-            <a href="/register"> Luo tunnus </a>
-          </p>      
+        <div class="login">
+            <a class="auth-button" href="/login"> Kirjaudu sisään </a>
+            <a class="auth-button" href="/register"> Luo tunnus </a>
+        </div>
       {% endif %}
     
     </p>
+    <h2 class="events-title">Tapahtumat</h2>
+
+    <div class="events-nav">
     <a href="/search"> Hae tapahtumia </a>
-    <p></p>
-    <div class = "header">
-      <style>
-        ul {
-            list-style-type: none;
-            padding: 0;
-            text-align: center;
-        }
-        li {
-            margin-bottom: 20px;
-        }
-        .event-date::before {
-            content: "• ";
-            color: white;
-        }
-    </style>
-      <h2 style="text-align: center;">Tapahtumat</h2>
-      <ul>
-        {% for event in events %}
-          <li>
-            <a href="/event/{{ event.id }}">
-              {{ event.title }}
-            </a>
-            <br>
-          <div class = "time">
-            <span class="event-date">{{ event.event_time }}</span>
-          
-          </li>
-        {% endfor %}
-      </ul>
+    {% if session.user_id %}
+      <a href="/new_event"> Uusi tapahtuma </a>
+    {% endif %}
+
+    </div>
+
+    <div class="events">
+      {% for event in events %}
+        <div class="event">
+          <a href="/event/{{ event.id }}">
+            {{ event.title }}
+          </a>
+          <span class="time">{{ event.event_time }}</span>
+        </div>
+      {% endfor %}
+    </div>
   </body>
 </html>
