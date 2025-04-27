@@ -10,22 +10,41 @@ def add_event(title, event_time, description, event_type, user_id):
         
         event_time_formatted = event_time.strftime("%Y-%m-%d %H:%M")
         
-        sql = """INSERT INTO events (title, event_time, description, event_type, user_id)
+        sql = """INSERT INTO events 
+            (title, event_time, description, event_type, user_id)
                 VALUES (?, ?, ?, ?, ?)"""
         
         db.execute(sql, [title, event_time_formatted, description, event_type, user_id])
 
-        return db.last_insert_id()
+        event_id = db.last_insert_id()
+
+        sql = """INSERT INTO event_types
+             (event_id, title, value)
+               VALUES (?, ?, ?)"""
         
-    except ValueError as e:
-        print(f"Date format error: {e}")
-        raise ValueError(f"Virheellinen päivämäärän muoto: {event_time}")
+        for title, value in event_types:
+            db.execute(sql, [event_id, title, value])
+
+        return db.last_insert_id()
+    
     except Exception as e:
-        print(f"Database error in add_event: {e}")
-        raise
+        print(f"Error: {e}")
+        return None
+        
+def get_event_type(event_id):
+    sql = """SELECT title, value
+            FROM event_types
+            WHERE event_id = ?"""
+    
+    result = db.query(sql, [event_id])
+
+    return result if result else None
 
 def get_events():
-    sql = "SELECT id, title, event_time FROM events ORDER BY event_time ASC"
+    sql = """SELECT id, title, event_time
+            FROM events 
+            ORDER BY event_time ASC"""
+    
     return db.query(sql)
 
 def get_event(event_id):

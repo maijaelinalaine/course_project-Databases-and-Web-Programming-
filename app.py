@@ -106,9 +106,10 @@ def remove_event(event_id):
 def show_event(event_id):
     try:
         event = events.get_event(event_id)
+        event_type = events.get_event_type(event_id)
         if not event:
             abort(404)
-        return render_template("show_event.html", event=event)
+        return render_template("show_event.html", event=event, event_type=event_type)
     
     except Exception as e:
         return f"Virhe: tapahtuman näyttäminen epäonnistui"
@@ -130,6 +131,10 @@ def create_event():
         if not description or len(description) > 5000:
             abort(403)
         event_type = request.form["event_type"]
+        event_types = []
+        if event_type:
+            event_types.append(event_type)
+
         if not event_type:
             abort(403)
         
