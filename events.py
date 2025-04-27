@@ -8,7 +8,7 @@ def add_event(title, event_time, description, event_type, user_id):
         else:
             event_time = datetime.strptime(event_time, "%Y-%m-%d")
         
-        event_time_formatted = event_time.strftime("%Y-%m-%d %H:%M:%S")
+        event_time_formatted = event_time.strftime("%Y-%m-%d %H:%M")
         
         sql = """INSERT INTO events (title, event_time, description, event_type, user_id)
                 VALUES (?, ?, ?, ?, ?)"""
