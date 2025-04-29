@@ -1,6 +1,19 @@
 import db
 from datetime import datetime
 
+def get_event_types():
+    sql = """SELECT title, value
+            FROM event_types
+            ORDER BY title ASC"""
+    
+    result = db.query(sql)
+
+    event_types = []
+    for title in result:
+        event_types.append((title["title"]))
+    
+    return event_types
+
 def add_event(title, event_time, description, event_type, user_id):
     try:
         if "T" in event_time:
@@ -21,6 +34,8 @@ def add_event(title, event_time, description, event_type, user_id):
         sql = """INSERT INTO event_types
              (event_id, title, value)
                VALUES (?, ?, ?)"""
+        
+        event_types = get_event_types()
         
         for title, value in event_types:
             db.execute(sql, [event_id, title, value])

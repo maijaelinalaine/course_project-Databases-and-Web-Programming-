@@ -153,7 +153,7 @@ def create_event():
     except Exception as e:
         print("Error in create_event")
         return redirect("/new_event")
-    
+
 @app.route("/register")
 def register():
     return render_template("register.html")
