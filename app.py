@@ -1,13 +1,15 @@
-import sqlite3
+import sqlite3, secrets
 from flask import Flask
 from flask import abort, flash, redirect, render_template, request, session
-import config
-import users
-import events
+import config, users, events
 import db
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def check_csrf():
+    if request.form["csfr_token"] != session["csfr_token"]:
+        abort(403)
 
 def require_login():
     if "user_id" not in session:
@@ -27,6 +29,7 @@ def index():
         
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
+    require_login()
     try:
         user = users.get_user(user_id)
         if not user:
@@ -61,6 +64,7 @@ def search():
 @app.route("/edit_event/<int:event_id>")
 def edit_event(event_id):
     require_login()
+    check_csrf()
     try:
         event = events.get_event(event_id)
         if not event:
@@ -85,6 +89,7 @@ def edit_event(event_id):
 @app.route("/update_event", methods=["POST"])
 def update_event():
     require_login()
+    check_csrf()
     try:
         event_id = request.form["event_id"]
         event = events.get_event(event_id)
@@ -119,6 +124,7 @@ def update_event():
 @app.route("/remove/<int:event_id>", methods=["GET", "POST"])
 def remove_event(event_id):
     require_login()
+    check_csrf()
     try:
         event = events.get_event(event_id)
         if not event:
@@ -158,6 +164,7 @@ def new_event():
 @app.route("/create_event", methods=["POST"])
 def create_event():
     require_login()
+    check_csrf()
     try:
         event_time = request.form["event_time"]
         title = request.form["title"]
@@ -167,7 +174,7 @@ def create_event():
         description = request.form["description"]
         if not description or len(description) > 5000:
             abort(403)
-            
+
         event_type = request.form["event_type"]
         event_types = []
         if event_type:
@@ -228,6 +235,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
+            session["csfr_token"] = secrets.token_hex(16)
             return redirect("/")
         
         else:
