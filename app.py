@@ -60,6 +60,23 @@ def search():
 @app.route("/edit_event/<int:event_id>")
 def edit_event(event_id):
     require_login()
+    try:
+        event = events.get_event(event_id)
+        if not event:
+            abort(404)
+        if event["user_id"] != session["user_id"]:
+            abort(403)
+                
+        event_types = events.get_event_types()
+
+        return render_template("edit_event.html", event=event, event_types=event_types)
+                               
+    except Exception:
+        return f"Virhe: tapahtuman muokkaus epäonnistui"
+
+@app.route("/edit_event/<int:event_id>", methods=["POST"])
+def update_event(event_id):
+    require_login()
     check_csrf()
     try:
         event = events.get_event(event_id)
@@ -67,37 +84,11 @@ def edit_event(event_id):
             abort(404)
         if event["user_id"] != session["user_id"]:
             abort(403)
-        
-        event_types = events.get_event_types(event_id)
-        if not event_types:
-            event_types = []
-
-        for entry in events.get_event_type(event_id):
-            if entry["value"] == event["event_type"]:
-                event_type = entry["title"]
-                break
-
-        return render_template("edit_event.html", event=event, event_type=event_type)
-                               
-    except Exception:
-        return f"Virhe: tapahtuman muokkaus epäonnistui"
-
-@app.route("/update_event", methods=["POST"])
-def update_event():
-    require_login()
-    check_csrf()
-    try:
-        event_id = request.form["event_id"]
-        event = events.get_event(event_id)
-        if not event:
-            abort(404)
-        if event["event_id"] != session["user_id"]:
-            abort(403)
-
+            
         title = request.form["title"]
         if not title or len(title) > 50:
             abort(403)
-
+        
         event_time = request.form["event_time"]
         if not event_time:
             abort(403)
@@ -120,7 +111,6 @@ def update_event():
 @app.route("/remove/<int:event_id>", methods=["GET", "POST"])
 def remove_event(event_id):
     require_login()
-    check_csrf()
     try:
         event = events.get_event(event_id)
         if not event:
@@ -130,6 +120,7 @@ def remove_event(event_id):
             return render_template("remove_event.html", event=event)
         
         if request.method == "POST":
+            check_csrf()
             if "continue" in request.form:
                 events.remove_event(event["id"])
 

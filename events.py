@@ -60,15 +60,8 @@ def get_event(event_id):
     return result[0] if result else None
    
 def update_event(event_id, title, event_time, description, event_type):
-    sql = "UPDATE events SET title = ? AND description = ? AND event_time = ? AND event_type = ? WHERE id = ?"
-    db.execute(sql, [title, event_time, description, event_type, event_id])
-
-    sql = "DELETE FROM event_types WHERE event_id = ?"
-    db.execute(sql, [event_id])
-
-    sql = "INSERT INTO event_types (event_id, title, value) VALUES (?, ?, ?)"
-    for title, value in get_event_types():
-        db.execute(sql, [event_id, title, value])
+    sql = "UPDATE events SET title = ?, description = ?, event_time = ?, event_type = ? WHERE id = ?"
+    db.execute(sql, [title, description, event_time, event_type, event_id])
 
 def remove_event(event_id):
     sql = "DELETE FROM events WHERE id = ?"

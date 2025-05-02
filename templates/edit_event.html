@@ -47,17 +47,25 @@
         >
       </p>
       <p>
-        Tapahtuman tyyppi: <br />
-        {% for event_type in event_types %}
-        <p>
-          {{ event_type}}: <br />
-          <select name="{{event_type}}" required>
-            {% for option in event_types %}
-            <option value="{{ option }}" {% if option == event.event_type %}selected{% endif %}>{{ option }}</option>
+        Tapahtuman tyyppi:
+        <br />
+      <p>
+        <select name="event_type" required>
+            {% for event_type in event_types %}
+              <option value="{{ event_type }}" 
+                {% if event_type|lower == event.event_type|lower %}
+                  selected
+                {% endif %}>
+              {{ event_type }}
+              </option>
             {% endfor %}
         </select>
       </p>
-        {% endfor %}
+      <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ session['csrf_token'] }}"
+      />
       <input type="submit" value="Päivitä ilmoitus" />
     </form>
   </body>
