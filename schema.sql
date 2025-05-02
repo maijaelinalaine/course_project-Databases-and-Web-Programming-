@@ -16,8 +16,7 @@ CREATE TABLE events (
 
 CREATE TABLE event_types (
     id INTEGER PRIMARY KEY,
-    title TEXT
-    value TEXT
+    title TEXT UNIQUE
 );
 
 CREATE TABLE signups (

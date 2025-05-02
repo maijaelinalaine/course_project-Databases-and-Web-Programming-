@@ -47,16 +47,16 @@
           <option value="valitse" disabled selected>
             Valitse tapahtuman tyyppi
           </option>
-          <option value="koulutus">Sitsit</option>
-          <option value="bileet">Bileet</option>
-          <option value="appro">Appro</option>
-          <option value="excu">Excu</option>
-          <option value="risteily">Risteily</option>
-          <option value="liikunta">Liikunta</option>
-          <option value="tapaaminen">Tapaaminen</option>
-          <option value="muu">Muu</option>
+          {% for event_type in event_types %}
+          <option value="{{ event_type|lower }}">{{ event_type }}</option>
+          {% endfor %}
         </select>
       </p>
+      <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ session['csrf_token'] }}"
+      />
       <input type="submit" value="Luo ilmoitus" />
     </form>
   </body>

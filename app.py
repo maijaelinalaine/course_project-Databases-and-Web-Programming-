@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = config.secret_key
 
 def check_csrf():
-    if request.form["csfr_token"] != session["csfr_token"]:
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 def require_login():
@@ -38,14 +38,10 @@ def show_user(user_id):
         if not events:
             events = []
 
-        print(user)
-        print(events)
-
         return render_template("show_user.html", user=user, events=events)
     
     except Exception:
         return f"Virhe: Käyttäjän näyttäminen epäonnistui"
-    
 
 @app.route("/search")
 def search():
@@ -146,10 +142,11 @@ def remove_event(event_id):
 def show_event(event_id):
     try:
         event = events.get_event(event_id)
-        event_time = event["event_time"]
-        event_type = events.get_event_type(event_id)
         if not event:
             abort(404)
+
+        event_time = event["event_time"]
+        event_type = event["event_type"]
         
         return render_template("show_event.html", event=event, event_time=event_time, event_type=event_type)
     
@@ -159,7 +156,10 @@ def show_event(event_id):
 @app.route("/new_event")
 def new_event():
     require_login()
-    return render_template("new_event.html")
+
+    event_types = events.get_event_types()
+
+    return render_template("new_event.html", event_types=event_types)
 
 @app.route("/create_event", methods=["POST"])
 def create_event():
@@ -235,7 +235,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
-            session["csfr_token"] = secrets.token_hex(16)
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         
         else:

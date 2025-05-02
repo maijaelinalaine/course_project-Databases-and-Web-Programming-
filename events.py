@@ -2,9 +2,9 @@ import db
 from datetime import datetime
 
 def get_event_types():
-    sql = """SELECT title, value
+    sql = """SELECT title
             FROM event_types
-            ORDER BY title ASC"""
+        """
     
     result = db.query(sql)
 
@@ -31,30 +31,12 @@ def add_event(title, event_time, description, event_type, user_id):
 
         event_id = db.last_insert_id()
 
-        sql = """INSERT INTO event_types
-             (event_id, title, value)
-               VALUES (?, ?, ?)"""
-        
-        event_types = get_event_types()
-        
-        for title, value in event_types:
-            db.execute(sql, [event_id, title, value])
-
-        return db.last_insert_id()
+        return event_id
     
     except Exception as e:
         print(f"Error: {e}")
         return None
-        
-def get_event_type(event_id):
-    sql = """SELECT title, value
-            FROM event_types
-            WHERE event_id = ?"""
     
-    result = db.query(sql, [event_id])
-
-    return result if result else None
-
 def get_events():
     sql = """SELECT id, title, event_time
             FROM events 

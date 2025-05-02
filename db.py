@@ -30,11 +30,28 @@ def create_tables():
             UNIQUE(event_id, user_id)
         )
     ''')
+    cursor.execute('''
+        CREATE TABLE event_types (
+            id INTEGER PRIMARY KEY,
+            title TEXT
+        )
+    ''')
+    cursor.execute('''
+        INSERT INTO event_types (title) VALUES ('Sitsit');
+        INSERT INTO event_types (title) VALUES ('Bileet');
+        INSERT INTO event_types (title) VALUES ('Appro');
+        INSERT INTO event_types (title) VALUES ('Excu');
+        INSERT INTO event_types (title) VALUES ('Risteily');
+        INSERT INTO event_types (title) VALUES ('Liikunta');
+        INSERT INTO event_types (title) VALUES ('Tapaaminen');
+        INSERT INTO event_types (title) VALUES ('Muu');
+    ''')
     conn.commit()
     conn.close()
 
 def get_connection():
     con = sqlite3.connect("database.db")
+    con.set_trace_callback(print)
     con.execute("PRAGMA foreign_keys = ON")
     con.row_factory = sqlite3.Row
     return con

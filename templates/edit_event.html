@@ -51,15 +51,13 @@
         {% for event_type in event_types %}
         <p>
           {{ event_type}}: <br />
-          <select name="event_type" required>
-            <option value="" disabled selected>Valitse tapahtuman tyyppi</option>
+          <select name="{{event_type}}" required>
             {% for option in event_types %}
             <option value="{{ option }}" {% if option == event.event_type %}selected{% endif %}>{{ option }}</option>
             {% endfor %}
         </select>
       </p>
         {% endfor %}
-      </p>
       <input type="submit" value="Päivitä ilmoitus" />
     </form>
   </body>
