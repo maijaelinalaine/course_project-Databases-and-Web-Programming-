@@ -48,19 +48,17 @@
       </p>
       <p>
         Tapahtuman tyyppi: <br />
-        <select name="event_type" required>
-          <option value="{{ event.event_type }}" selected>
-            {{ event.event_type }}
-          </option>
-          <option value="sitsit">Sitsit</option>
-          <option value="bileet">Bileet</option>
-          <option value="appro">Appro</option>
-          <option value="excu">Excu</option>
-          <option value="risteily">Risteily</option>
-          <option value="liikunta">Liikunta</option>
-          <option value="tapaaminen">Tapaaminen</option>
-          <option value="muu">Muu</option>
+        {% for event_type in event_types %}
+        <p>
+          {{ event_type}}: <br />
+          <select name="event_type" required>
+            <option value="" disabled selected>Valitse tapahtuman tyyppi</option>
+            {% for option in event_types %}
+            <option value="{{ option }}" {% if option == event.event_type %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
         </select>
+      </p>
+        {% endfor %}
       </p>
       <input type="submit" value="Päivitä ilmoitus" />
     </form>

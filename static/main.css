@@ -42,9 +42,9 @@ a:hover {
 }
 
 .auth-button {
-  color: rgb(16, 32, 32);
-  background-color: white;
-  border: none;
+  color: white;
+  background-color: rgb(16, 32, 32);
+  border: solid 1px rgb(140, 170, 137);
   padding: 10px;
   border-radius: 5px;
 }

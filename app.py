@@ -9,7 +9,6 @@ import db
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
-
 def require_login():
     if "user_id" not in session:
         abort(403)
@@ -59,29 +58,64 @@ def search():
     except Exception:
         return f"Virhe: tapahtumien haku epäonnistui"
     
-@app.route("/edit_event/<int:event_id>", methods=["GET", "POST"])
+@app.route("/edit_event/<int:event_id>")
 def edit_event(event_id):
     require_login()
     try:
         event = events.get_event(event_id)
         if not event:
             abort(404)
-
-        if request.method == "GET":
-            return render_template("edit_event.html", event=event)
+        if event["user_id"] != session["user_id"]:
+            abort(403)
         
-        if request.method == "POST":
-            title = request.form["title"]
-            event_time = request.form["event_time"]
-            description = request.form["description"]
-            event_type = request.form["event_type"]
-            events.edit_event(event_id, title, event_time, description, event_type)
+        event_types = events.get_event_types(event_id)
+        if not event_types:
+            event_types = []
 
-            return redirect("/event/" + str(event_id))
+        for entry in events.get_event_type(event_id):
+            if entry["value"] == event["event_type"]:
+                event_type = entry["title"]
+                break
+
+        return render_template("edit_event.html", event=event, event_type=event_type)
                                
     except Exception:
         return f"Virhe: tapahtuman muokkaus epäonnistui"
+
+@app.route("/update_event", methods=["POST"])
+def update_event():
+    require_login()
+    try:
+        event_id = request.form["event_id"]
+        event = events.get_event(event_id)
+        if not event:
+            abort(404)
+        if event["event_id"] != session["user_id"]:
+            abort(403)
+
+        title = request.form["title"]
+        if not title or len(title) > 50:
+            abort(403)
+
+        event_time = request.form["event_time"]
+        if not event_time:
+            abort(403)
+
+        description = request.form["description"]
+        if not description or len(description) > 5000:
+            abort(403)
+
+        event_type = request.form["event_type"]
+        if not event_type:
+            abort(403)
+
+        events.update_event(event_id, title, event_time, description, event_type)
+        
+        return redirect("/event/" + str(event_id))
     
+    except Exception:
+        return f"Virhe: tapahtuman muokkaus epäonnistui"
+
 @app.route("/remove/<int:event_id>", methods=["GET", "POST"])
 def remove_event(event_id):
     require_login()
@@ -106,10 +140,12 @@ def remove_event(event_id):
 def show_event(event_id):
     try:
         event = events.get_event(event_id)
+        event_time = event["event_time"]
         event_type = events.get_event_type(event_id)
         if not event:
             abort(404)
-        return render_template("show_event.html", event=event, event_type=event_type)
+        
+        return render_template("show_event.html", event=event, event_time=event_time, event_type=event_type)
     
     except Exception as e:
         return f"Virhe: tapahtuman näyttäminen epäonnistui"
@@ -127,9 +163,11 @@ def create_event():
         title = request.form["title"]
         if not title or len(title) > 50:
             abort(403)
+
         description = request.form["description"]
         if not description or len(description) > 5000:
             abort(403)
+            
         event_type = request.form["event_type"]
         event_types = []
         if event_type:
