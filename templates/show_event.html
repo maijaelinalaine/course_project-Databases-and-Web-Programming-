@@ -36,11 +36,14 @@
       Ilmoittautuminen on sitova <br />
       <p>
       <input type="submit" value="Ilmoittaudu" />
-    <p>
-      Tapahtumaan ilmoittautuneet:
-      {% for signup in signups %}
-        <li> <a href="{{signup.user_id}}">{{signup.username}} </a><li>
-      {% endfor %}
+    {% if signups|length > 0 %}
+      <p>Tapahtumaan ilmoittautuneet:</p>
+      <ul>
+        {% for signup in signups %}
+          <li><a href="{{signup.user_id}}">{{signup.username}}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
       <p>
       <a href="/">Takaisin</a>
     </p>
