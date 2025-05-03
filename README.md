@@ -20,5 +20,5 @@ Steps to run the app
 - Create database:
   $ sqlite3 database.db < schema.sql
 
-- Run
+- Run:
   $ flask run
