@@ -39,6 +39,9 @@ def signup():
     user_id = session["user_id"]
 
     events.signup(event_id, user_id)
+    if user_id in events.get_signups(event_id):
+        abort(403)
+
     return redirect(f"/event/{event_id}")
 
 @app.route("/user/<int:user_id>")
@@ -225,7 +228,6 @@ def create():
         return redirect("/register")
 
     return redirect("/")
-        
 
 @app.route("/login", methods=["GET","POST"])
 def login():

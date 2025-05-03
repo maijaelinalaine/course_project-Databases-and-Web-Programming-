@@ -32,14 +32,16 @@
         name="csrf_token"
         value="{{ session['csrf_token'] }}"
       />
+      <p>
+      Ilmoittautuminen on sitova <br />
+      <p>
       <input type="submit" value="Ilmoittaudu" />
     <p>
       Tapahtumaan ilmoittautuneet:
       {% for signup in signups %}
-        <li> 
-          <a href="{{signup.user_id}}">{{signup.username}} </a>
-        <li>
+        <li> <a href="{{signup.user_id}}">{{signup.username}} </a><li>
       {% endfor %}
+      <p>
       <a href="/">Takaisin</a>
     </p>
   </body>
