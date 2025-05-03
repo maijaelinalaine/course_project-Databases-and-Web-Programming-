@@ -21,8 +21,8 @@ CREATE TABLE event_types (
 
 CREATE TABLE signups (
     id INTEGER PRIMARY KEY,
-    event_id INTEGER REFERENCES events(id),
-    user_id INTEGER REFERENCES users(id),
+    event_id INTEGER REFERENCES events,
+    user_id INTEGER REFERENCES users,
     signup_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(event_id, user_id)
 );

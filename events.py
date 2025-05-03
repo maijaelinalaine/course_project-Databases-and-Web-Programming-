@@ -36,7 +36,22 @@ def add_event(title, event_time, description, event_type, user_id):
     except Exception as e:
         print(f"Error: {e}")
         return None
+
+def signup(event_id, user_id):
+    sql = """INSERT INTO signups (event_id, user_id, signup_time)
+            VALUES (?, ?, ?)"""
+        
+    db.execute(sql, [event_id, user_id, datetime.now().strftime("%Y-%m-%d %H:%M")])
+
+def get_signups(event_id):
+    sql = """SELECT u.id, u.username, s.signup_time
+            FROM users u, signups s
+            WHERE s.event_id = ?
+            AND s.user_id = u.id
+            ORDER BY s.signup_time ASC"""
     
+    return db.query(sql, [event_id])
+
 def get_events():
     sql = """SELECT id, title, event_time
             FROM events 

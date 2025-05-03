@@ -26,10 +26,23 @@ def index():
         session["username"] = None
         db.create_tables()
         return f"Virhe: tapahtumien haku epäonnistui, virhe: {str(e)}"
-        
+
+@app.route("/signup", methods=["POST"])       
+def signup():
+    require_login()
+    check_csrf()
+    event_id = request.form["event_id"]
+
+    event = events.get_event(event_id)
+    if not event:
+        abort(404 )
+    user_id = session["user_id"]
+
+    events.signup(event_id, user_id)
+    return redirect(f"/event/{event_id}")
+
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
-    require_login()
     try:
         user = users.get_user(user_id)
         if not user:
@@ -122,9 +135,10 @@ def remove_event(event_id):
         if request.method == "POST":
             check_csrf()
             if "continue" in request.form:
-                events.remove_event(event["id"])
-
-            return redirect("/")
+                events.remove_event(event_id)
+                return redirect("/")
+            else:
+                return redirect(f"/event/{event_id}")
         
     except Exception:
         return f"Virhe: tapahtuman poistaminen epäonnistui"
@@ -138,11 +152,12 @@ def show_event(event_id):
 
         event_time = event["event_time"]
         event_type = event["event_type"]
+        signups = events.get_signups(event_id)
         
-        return render_template("show_event.html", event=event, event_time=event_time, event_type=event_type)
+        return render_template("show_event.html", event=event, event_time=event_time, event_type=event_type, signups=signups)
     
     except Exception as e:
-        return f"Virhe: tapahtuman näyttäminen epäonnistui"
+        return f"Virhe: tapahtuman näyttäminen epäonnistui: {str(e)}"
     
 @app.route("/new_event")
 def new_event():

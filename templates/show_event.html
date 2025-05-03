@@ -23,9 +23,23 @@
     <p>{{ event.description }}</p>
     <p>Tapahtuman tyyppi: {{ event.event_type }}</p>
     <p>
-      Ilmoittaja: <a href="/user/{{event.user_id}}">{{ event.username }}</a>
+      Vastuuhenkilö: <a href="/user/{{event.user_id}}">{{ event.username }}</a>
     </p>
+    <form action="/signup" method="post">
+      <input type="hidden" name="event_id" value="{{ event.id }}" />
+      <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ session['csrf_token'] }}"
+      />
+      <input type="submit" value="Ilmoittaudu" />
     <p>
+      Tapahtumaan ilmoittautuneet:
+      {% for signup in signups %}
+        <li> 
+          <a href="{{signup.user_id}}">{{signup.username}} </a>
+        <li>
+      {% endfor %}
       <a href="/">Takaisin</a>
     </p>
   </body>

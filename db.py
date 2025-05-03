@@ -27,6 +27,7 @@ def create_tables():
             id INTEGER PRIMARY KEY,
             event_id INTEGER REFERENCES events(id),
             user_id INTEGER REFERENCES users(id),
+            signup_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(event_id, user_id)
         )
     ''')
@@ -36,16 +37,9 @@ def create_tables():
             title TEXT
         )
     ''')
-    cursor.execute('''
-        INSERT INTO event_types (title) VALUES ('Sitsit');
-        INSERT INTO event_types (title) VALUES ('Bileet');
-        INSERT INTO event_types (title) VALUES ('Appro');
-        INSERT INTO event_types (title) VALUES ('Excu');
-        INSERT INTO event_types (title) VALUES ('Risteily');
-        INSERT INTO event_types (title) VALUES ('Liikunta');
-        INSERT INTO event_types (title) VALUES ('Tapaaminen');
-        INSERT INTO event_types (title) VALUES ('Muu');
-    ''')
+    event_types = ['Sitsit', 'Bileet', 'Appro', 'Excu', 'Risteily', 'Liikunta', 'Tapaaminen', 'Muu']
+    for event_type in event_types:
+        cursor.execute('INSERT INTO event_types (title) VALUES (?)', (event_type,))
     conn.commit()
     conn.close()
 
