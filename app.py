@@ -21,11 +21,11 @@ def index():
         all_events = events.get_events()
         return render_template("index.html", events=all_events)
     
-    except Exception as e:
+    except Exception:
         session["user_id"] = None
         session["username"] = None
         db.create_tables()
-        return f"Virhe: tapahtumien haku epäonnistui, virhe: {str(e)}"
+        return "Virhe: tapahtumien haku epäonnistui"
 
 @app.route("/signup", methods=["POST"])       
 def signup():
@@ -53,11 +53,14 @@ def show_user(user_id):
         events = users.get_events(user_id)
         if not events:
             events = []
+        signups = users.get_signups(user_id)
+        if not signups:
+            signups = []
 
-        return render_template("show_user.html", user=user, events=events)
+        return render_template("show_user.html", user=user, events=events, signups=signups)
     
     except Exception:
-        return f"Virhe: Käyttäjän näyttäminen epäonnistui"
+        return "Virhe: Käyttäjän näyttäminen epäonnistui"
 
 @app.route("/search")
 def search():
@@ -71,7 +74,7 @@ def search():
         return render_template("search.html", query=query, results=results)
     
     except Exception:
-        return f"Virhe: tapahtumien haku epäonnistui"
+        return "Virhe: tapahtumien haku epäonnistui"
     
 @app.route("/edit_event/<int:event_id>")
 def edit_event(event_id):
@@ -88,7 +91,7 @@ def edit_event(event_id):
         return render_template("edit_event.html", event=event, event_types=event_types)
                                
     except Exception:
-        return f"Virhe: tapahtuman muokkaus epäonnistui"
+        return "Virhe: tapahtuman muokkaus epäonnistui"
 
 @app.route("/edit_event/<int:event_id>", methods=["POST"])
 def update_event(event_id):
@@ -122,7 +125,7 @@ def update_event(event_id):
         return redirect("/event/" + str(event_id))
     
     except Exception:
-        return f"Virhe: tapahtuman muokkaus epäonnistui"
+        return "Virhe: tapahtuman muokkaus epäonnistui"
 
 @app.route("/remove/<int:event_id>", methods=["GET", "POST"])
 def remove_event(event_id):
@@ -144,7 +147,7 @@ def remove_event(event_id):
                 return redirect(f"/event/{event_id}")
         
     except Exception:
-        return f"Virhe: tapahtuman poistaminen epäonnistui"
+        return "Virhe: tapahtuman poistaminen epäonnistui"
     
 @app.route("/event/<int:event_id>")
 def show_event(event_id):
@@ -159,8 +162,8 @@ def show_event(event_id):
         
         return render_template("show_event.html", event=event, event_time=event_time, event_type=event_type, signups=signups)
     
-    except Exception as e:
-        return f"Virhe: tapahtuman näyttäminen epäonnistui: {str(e)}"
+    except Exception:
+        return "Virhe: tapahtuman näyttäminen epäonnistui"
     
 @app.route("/new_event")
 def new_event():
@@ -200,12 +203,10 @@ def create_event():
         
         return redirect(f"/event/{event_id}")
         
-    except ValueError as e:
-        print(f"Virhe: {str(e)}")
+    except ValueError:
         return redirect("/new_event")
     
-    except Exception as e:
-        print("Error in create_event")
+    except Exception:
         return redirect("/new_event")
 
 @app.route("/register")

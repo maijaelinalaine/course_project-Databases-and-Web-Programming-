@@ -13,9 +13,18 @@
     <p></p>
     <p>Liittynyt jäseneksi: {{ user.registered_at }}</p>
     <ul>
-      <p>Käyttäjän tapahtumat:</p>
+      <p>Vastuuhenkilönä tapahtumissa:</p>
 
       {% for event in events %}
+      <li>
+        <a href="/event/{{ event.id }}">{{ event.title }}</a> -
+        {{event.event_time }}
+      </li>
+      {% endfor %}
+    </ul>
+    <p>Ilmoittautunut tapahtumiin:</p>
+    <ul>
+      {% for event in signups %}
       <li>
         <a href="/event/{{ event.id }}">{{ event.title }}</a> -
         {{event.event_time }}

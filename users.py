@@ -34,3 +34,14 @@ def get_events(user_id):
     result = db.query(sql, [user_id])
 
     return result if result else None
+
+def get_signups(user_id):
+    sql = """SELECT e.id, e.title, e.event_time, e.description, e.event_type
+            FROM events e
+            JOIN signups s ON e.id = s.event_id
+            WHERE s.user_id = ? 
+            ORDER BY e.event_time ASC"""
+    
+    result = db.query(sql, [user_id])
+
+    return result if result else None

@@ -9,7 +9,7 @@ Event calendar website for a student association, inspired by University of Hels
   - sign up for events and cancel sign ups
   - see information of all future events and list of signed up members
   - search events
-- Website has a profile page, with future and past events that user has organized, potential payment information of events
+- Website has a profile page, with future and past events that user has organized and signed up for
 - Events as primary data items and sign ups as secondary data items
 
 Steps to run the app
