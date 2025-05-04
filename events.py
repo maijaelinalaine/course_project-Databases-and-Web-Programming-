@@ -15,7 +15,6 @@ def get_event_types():
     return event_types
 
 def add_event(title, event_time, description, event_type, user_id):
-    try:
         if "T" in event_time:
             event_time = datetime.strptime(event_time, "%Y-%m-%dT%H:%M")
         else:
@@ -32,10 +31,6 @@ def add_event(title, event_time, description, event_type, user_id):
         event_id = db.last_insert_id()
 
         return event_id
-    
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
 
 def signup(event_id, user_id):
     sql = """INSERT INTO signups (event_id, user_id, signup_time)
@@ -79,9 +74,11 @@ def update_event(event_id, title, event_time, description, event_type):
     db.execute(sql, [title, description, event_time, event_type, event_id])
 
 def remove_event(event_id):
+    sql =  "DELETE FROM signups WHERE event_id = ?"
+    db.execute(sql, [event_id])
     sql = "DELETE FROM events WHERE id = ?"
     db.execute(sql, [event_id])
-
+    
 def search(query):
     sql = """SELECT id, event_time, title, event_type
             FROM events e

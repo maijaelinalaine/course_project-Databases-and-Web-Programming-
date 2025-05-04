@@ -146,9 +146,9 @@ def remove_event(event_id):
             else:
                 return redirect(f"/event/{event_id}")
         
-    except Exception:
-        return "Virhe: tapahtuman poistaminen epäonnistui"
-    
+    except Exception as e:
+        return f"Virhe: tapahtuman poistaminen epäonnistui. {str(e)}"
+
 @app.route("/event/<int:event_id>")
 def show_event(event_id):
     try:

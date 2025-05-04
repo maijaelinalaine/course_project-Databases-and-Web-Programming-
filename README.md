@@ -17,8 +17,9 @@ Steps to run the app
 - Install flask:
   $ pip install flask
 
-- Create database:
+- Create and initialize database:
   $ sqlite3 database.db < schema.sql
+  $ dqlite3 database.db < init.sql
 
 - Run:
   $ flask run
