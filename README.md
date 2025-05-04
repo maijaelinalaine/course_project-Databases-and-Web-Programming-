@@ -19,7 +19,7 @@ Steps to run the app
 
 - Create and initialize database:
   $ sqlite3 database.db < schema.sql
-  $ dqlite3 database.db < init.sql
+  $ sqlite3 database.db < init.sql
 
 - Run:
   $ flask run
