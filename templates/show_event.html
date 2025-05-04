@@ -25,6 +25,7 @@
     <p>
       Vastuuhenkilö: <a href="/user/{{event.user_id}}">{{ event.username }}</a>
     </p>
+    <p>
     <form action="/signup" method="post">
       <input type="hidden" name="event_id" value="{{ event.id }}" />
       <input
